@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Trustabl Design System
 
-## Getting Started
+Root-level Next.js implementation of the Trustabl design system.
 
-First, run the development server:
+This repo is not a generic `create-next-app` starter anymore. It contains the Trustabl token layer, reusable UI components, pattern components, a visual verification route, and a developer reference route.
+
+## Stack
+
+- Next.js 16 app router with root `app/` routes
+- React 19 and TypeScript
+- Tailwind CSS v4 using CSS variables from `app/globals.css`
+- `lucide-react` icons only
+- `focus-trap-react` for modal focus containment
+- Inter and JetBrains Mono through `next/font/google`
+
+Do not add shadcn, Radix, Headless UI, Heroicons, React Icons, or catch-all primitive files.
+
+## Source Of Truth
+
+- `AGENTS.md` is the short execution contract for agents working in this repo.
+- `AGENT.md` is the long-form implementation guide and phase checklist.
+- `cf-design-system.md` is the long-form visual/component/token specification.
+- `docs/` contains the normalized local governance summaries used during day-to-day work.
+- `app/globals.css` is the active token implementation.
+
+If the long-form MD files contradict each other, follow the normalized rule in `AGENTS.md` and update docs in the same change.
+
+## Routes
+
+- `/` redirects to `/ui-preview`.
+- `/ui-preview` is the visual contract route for rendered component and pattern states.
+- `/ui-docs` is the Storybook-style developer reference with specs, states, and prop notes.
+
+## Component Inventory
+
+UI components live in `components/ui/` and export through `components/ui/index.ts`.
+
+Pattern components live in `components/patterns/` and are imported directly by path.
+
+Current pattern layer:
+
+- `Sidebar`
+- `Toolbar`
+- `FormLayout`
+- `EmptyState`
+
+## Token Rules
+
+- Components use semantic tokens such as `--color-bg-surface`, not primitive tokens.
+- Raw hex is allowed only in token definitions inside `app/globals.css`.
+- Radius must use `--radius-sharp`, `--radius-base`, `--radius-card`, or `--radius-pill`.
+- Z-index must use CSS variables through inline style, not Tailwind `z-*` classes.
+- Interactive transitions should use explicit transition properties, not `transition-all`.
+
+## Verification
+
+Run these before considering governance or component work complete:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Recommended static checks:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+rg -n "transition-all|ease-\\[ease\\]|\\bz-(10|20|30|40|50)\\b" components app
+rg -n "aria-haspopup=.|role=.button" components app/ui-docs app/ui-preview
+rg -n "#[0-9A-Fa-f]{3,6}" components app
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Browser-check `/ui-preview` and `/ui-docs` after UI changes. Build passing is necessary, but it does not prove the preview contract is visually complete.
