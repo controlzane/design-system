@@ -23,10 +23,10 @@ export function Alert({ variant = 'info', title, description, onDismiss }: Alert
     <div
       role="alert"
       aria-live="assertive"
-      className="flex items-center gap-3 px-4 py-3.5 rounded-[var(--radius-base)] border-l-[3px] border-l-[var(--color-border-muted)] bg-[var(--color-bg-surface)] w-full"
+      className="inline-flex max-w-full self-start items-center gap-3 px-4 py-3.5 rounded-[var(--radius-base)] border-l-[3px] border-l-[var(--color-border-muted)] bg-[var(--color-bg-surface)]"
     >
       <Icon size={16} className="text-[var(--color-text-primary)] flex-shrink-0" />
-      <div className="flex-1">
+      <div className="min-w-0">
         <p className="text-sm font-semibold text-[var(--color-text-primary)]">{title}</p>
         {description && <p className="text-xs text-[var(--color-text-secondary)] mt-0.5">{description}</p>}
       </div>
